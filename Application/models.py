@@ -38,8 +38,8 @@ class Post(db.Model):
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    up_votes = db.Column(db.Integer)
-    down_votes = db.Column(db.Integer)
+    up_votes = db.Column(db.Integer, default=0)
+    down_votes = db.Column(db.Integer, default=0)
 
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
     comms = db.relationship('Post')

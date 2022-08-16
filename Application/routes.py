@@ -115,6 +115,26 @@ def new_comment(post_id):
         return redirect(url_for('home'))
     return render_template('create_post.html', title='new post', form=form, legend='New post')
 
+@app.route('/post/<int:post_id>/up', methods=['GET','POST'])
+@login_required
+def up_vote(post_id):
+    post = Post.query.get_or_404(post_id)
+    post.up_votes = post.up_votes + 1
+    print(post.down_votes)
+    db.session.commit()
+    pos = Post.query.filter_by(post_id=post_id).all()
+    return render_template('post.html', title=post.title, p=post, pos=pos)
+
+@app.route('/post/<int:post_id>/down', methods=['GET','POST'])
+@login_required
+def down_vote(post_id):
+    post = Post.query.get_or_404(post_id)
+    post.down_votes = post.down_votes + 1
+    print(post.down_votes)
+    db.session.commit()
+    pos = Post.query.filter_by(post_id=post_id).all()
+    return render_template('post.html', title=post.title, p=post, pos=pos)
+
 @app.route('/post/<int:post_id>')
 def post(post_id):
     post = Post.query.get_or_404(post_id)

@@ -4,7 +4,7 @@
           <img class="rounded-circle article-img" src="{{url_for('static', filename='profil_pics/' + p.autor.img)}}">
           <div class="media-body">
             <div class="article-metadata">
-              <a class="mr-2" href="{{url_for('user_posts', username=p.autor.username)}}">{{ p.autor.username }}</a> 
+              <a class="mr-2" href="{{url_for('user_posts', username=p.autor.username)}}">{{ p.autor.username }}</a>
               <small class="text-muted">{{ p.date.strftime('%Y-%m-%d') }}</small>
               {% if p.autor == current_user %}
                 <div>
@@ -16,8 +16,8 @@
             <h2 class="article-title" >{{ p.title }}</h2>
             <p class="article-content">{{ p.content }}</p>
             <div>
-                <a class="btn btn-secondry text-darksteel" href="{{url_for('new_comment', post_id=p.id)}}">Up Vote</a>
-                <a class="btn btn-secondry text-darksteel" href="{{url_for('new_comment', post_id=p.id)}}">Down Vote</a>
+                <a class="btn btn-secondry text-darksteel" href="{{url_for('up_vote', post_id=p.id)}}">+{{ p.up_votes }} Up Vote</a>
+                <a class="btn btn-secondry text-darksteel" href="{{url_for('down_vote', post_id=p.id)}}">-{{ p.down_votes }} Down Vote</a>
                 <a class="btn btn-secondry text-darksteel" href="{{url_for('new_comment', post_id=p.id)}}">Comment</a>
             </div>
             <p class="article-content"></p>
