@@ -3,7 +3,7 @@
 <h1 class="mb-3">Posts by {{user.username}}({{pos.total}})</h1>
     {%for p in pos.items %}
         <article class="media content-section">
-          <img class="rounded-circle article-img" src="{{url_for('static', filename='profil_pics/' + current_user.img)}}">
+          <img class="rounded-circle article-img" src="{{url_for('static', filename='profil_pics/' + p.autor.img)}}">
           <div class="media-body">
             <div class="article-metadata">
               <a class="mr-2" href="{{url_for('user_posts', username=p.autor.username)}}">{{ p.autor.username }}</a>

@@ -4,7 +4,7 @@ from wtforms import StringField, PasswordField, SubmitField, BooleanField, Valid
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 from Application.models import User
 from flask_login import current_user
-import email_validator
+#import email_validator
 
 
 class RegForm(FlaskForm):
@@ -32,7 +32,7 @@ class LogForm(FlaskForm):
 class UpdateAccForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email',  validators=[DataRequired(), Email()])
-    picture = FileField('Update pict', validators=[FileAllowed(['jpg', 'png'])])
+    picture = FileField('Update pict', validators=[FileAllowed(['png'])])
     submit = SubmitField('Update')
 
     def validate_username(self, username):
