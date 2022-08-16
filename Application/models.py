@@ -14,6 +14,7 @@ class User(db.Model, UserMixin):
     img = db.Column(db.String(20), nullable=False, default='default.png')
     password = db.Column(db.String(60), nullable=False)
     posts = db.relationship('Post', backref='autor', lazy=True)
+    likes = db.relationship('Likes', backref='liker', lazy=True)
 
     def get_reset_token(self,expires_sec=1800):
         s = ser(app.config['SECRET_KEY'], expires_sec)
@@ -32,6 +33,7 @@ class User(db.Model, UserMixin):
         return f"User('{self.username}', '{self.email}', '{self.img}')"
 
 
+
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
@@ -40,6 +42,7 @@ class Post(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     up_votes = db.Column(db.Integer, default=0)
     down_votes = db.Column(db.Integer, default=0)
+    likes = db.relationship('Likes', backref='liked', lazy=True)
 
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
     comms = db.relationship('Post')
@@ -47,4 +50,12 @@ class Post(db.Model):
 
 
     def __repr__(self):
-        return f"Pot('{self.title}', '{self.date}')"
+        return f"Post('{self.title}', '{self.date}')"
+
+
+class Likes(db.Model):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), primary_key=True, nullable=False)
+    state = db.Column(db.Boolean, nullable=True, default=None)
+    def __repr__(self):
+        return f"User('{self.user_id}', '{self.post_id}', '{self.state}')"

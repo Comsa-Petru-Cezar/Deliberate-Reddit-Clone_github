@@ -1,7 +1,7 @@
 import secrets
 import os
 from flask import render_template, url_for, flash, redirect, request, abort
-from Application.models import User, Post
+from Application.models import User, Post, Likes
 from Application.forms import RegForm, LogForm, UpdateAccForm, PostForm
 from Application import app, db, bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
@@ -115,27 +115,69 @@ def new_comment(post_id):
         return redirect(url_for('home'))
     return render_template('create_post.html', title='new post', form=form, legend='New post')
 
-@app.route('/post/<int:post_id>/up', methods=['GET','POST'])
+@app.route('/up/<int:post_id>/', methods=['GET','POST'])
 @login_required
 def up_vote(post_id):
+    like = Likes.query.filter_by(user_id=current_user.id, post_id=post_id).first()
+
     post = Post.query.get_or_404(post_id)
-    post.up_votes = post.up_votes + 1
-    print(post.down_votes)
+
+    if like == None:
+        like = Likes(user_id=current_user.id, post_id=post_id, state=True)
+        post.up_votes = post.up_votes + 1
+        db.session.add(like)
+        print(11)
+    elif like.state == None:
+        like.state = True
+        post.up_votes = post.up_votes + 1
+        print(12)
+    elif like.state == False:
+        like.state = True
+        post.up_votes = post.up_votes + 1
+        post.down_votes = post.down_votes - 1
+        print(13)
+    else:
+        like.state = None
+        post.up_votes = post.up_votes - 1
+        print(14)
+
+
     db.session.commit()
     pos = Post.query.filter_by(post_id=post_id).all()
-    return render_template('post.html', title=post.title, p=post, pos=pos)
+    return redirect(url_for('post', post_id=post_id))
 
-@app.route('/post/<int:post_id>/down', methods=['GET','POST'])
+
+@app.route('/down/<int:post_id>/', methods=['GET','POST'])
 @login_required
 def down_vote(post_id):
+    like = Likes.query.filter_by(user_id=current_user.id, post_id=post_id).first()
+
     post = Post.query.get_or_404(post_id)
-    post.down_votes = post.down_votes + 1
-    print(post.down_votes)
+
+    if like == None:
+        like = Likes(user_id=current_user.id, post_id=post_id, state=True)
+        post.down_votes = post.down_votes + 1
+        db.session.add(like)
+        print(21)
+    elif like.state == None:
+        like.state = False
+        post.down_votes = post.down_votes + 1
+        print(22)
+    elif like.state == True:
+        like.state = False
+        post.down_votes = post.down_votes + 1
+        post.up_votes = post.up_votes - 1
+        print(23)
+    else:
+        like.state = None
+        post.down_votes = post.down_votes - 1
+        print(24)
+
     db.session.commit()
     pos = Post.query.filter_by(post_id=post_id).all()
-    return render_template('post.html', title=post.title, p=post, pos=pos)
+    return redirect(url_for('post', post_id=post_id))
 
-@app.route('/post/<int:post_id>')
+@app.route('/post/<int:post_id>/')
 def post(post_id):
     post = Post.query.get_or_404(post_id)
 
